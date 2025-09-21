@@ -11,7 +11,7 @@ export default function MintCard() {
 
     const { writeContract, isSuccess } = useWriteContract()
     
-    const { data: total, refetch } = useReadContract({
+    const { data: total } = useReadContract({
         abi: NFTabi,
         address: config.NFT_CONTRACT_ADDRESS,
         functionName: 'totalSupply',
