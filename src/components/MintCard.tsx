@@ -28,9 +28,9 @@ export default function MintCard() {
         functionName: 'getAllId',
         args: [address],
     })
-    const [totalSupply, setTotalSupply ] = useState<String>('0')
-    const [balance, setBalance ] = useState<String>('0')
-    const [tokenIDs,setTokenIDs] = useState<String[]>([])
+    const [totalSupply, setTotalSupply ] = useState<string>('0')
+    const [balance, setBalance ] = useState<string>('0')
+    const [tokenIDs,setTokenIDs] = useState<string[]>([])
 
     useEffect(() => {
         if(total){
