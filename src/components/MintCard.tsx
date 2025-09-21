@@ -5,6 +5,7 @@ import { useAccount, useReadContract, useWriteContract } from 'wagmi'
 import { config } from '../../config'
 import NFTabi from '../abis/NFTcontract.json'
 import MintCardInfo from './MintCardInfo'
+import Form from './Form'
 
 export default function MintCard() {
     const {address} = useAccount()
@@ -40,7 +41,6 @@ export default function MintCard() {
 
     useEffect(() => {
         if(amount){
-            console.log('updated')
             setBalance(amount?.toString())
         }
     }, [amount])
@@ -56,21 +56,28 @@ export default function MintCard() {
         <Image width={200} height={200} src={icon} alt='Icon'></Image>
         <div>Total Minted: {totalSupply}</div>
         <div>You Minted: {balance}</div>
-        <button className='mx-5 p-2 bg-blue-300 rounded-lg hover:bg-blue-500' 
+        
+        <Form/>
+    </div>
+  )
+}
+
+
+/*
+
+<button className='mx-5 p-2 bg-blue-300 rounded-lg hover:bg-blue-500' 
             onClick={() => 
                 writeContract({ 
                     abi: NFTabi,
                     address: config.NFT_CONTRACT_ADDRESS,
                     functionName: 'mintNFT',
                 })}>MINT</button>
-        <p>My Mint</p>
-      <div className='w-full grid grid-cols-5 gap-5 flex justify-between '>
+
+<p>My Mint</p>
+        <div className='w-full grid grid-cols-5 gap-5 flex justify-between '>
         {tokenIDs != null &&
         (tokenIDs).map((n, idx) => (
             <MintCardInfo key={idx} tokenId={n.toString()}></MintCardInfo>
 
         ))}
-      </div>
-    </div>
-  )
-}
+      </div>*/
