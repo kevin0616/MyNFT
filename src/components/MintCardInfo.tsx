@@ -5,7 +5,12 @@ import { useAccount, useReadContract, useWriteContract } from 'wagmi'
 import { config } from '../../config'
 import NFTabi from '../abis/NFTcontract.json'
 
-export default function MintCardInfo({tokenId}) {
+
+type Props = {
+  tokenId: string;
+};
+
+export default function MintCardInfo({tokenId}: Props) {
   const { data: tokenURI } = useReadContract({
         abi: NFTabi,
         address: config.NFT_CONTRACT_ADDRESS,
