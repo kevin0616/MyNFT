@@ -16,7 +16,7 @@ interface Info{
 
 export default function Market() {
     const {address} = useAccount()
-    const [infos, setInfos] = useState<any[]>([])
+    const [infos, setInfos] = useState<Info[]>([])
     const { data } = useReadContract({
         abi: NFTabi,
         address: config.NFT_CONTRACT_ADDRESS,
