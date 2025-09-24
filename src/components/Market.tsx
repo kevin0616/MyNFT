@@ -4,6 +4,16 @@ import { config } from '../../config'
 import NFTabi from '../abis/NFTcontract.json'
 import MarketInfo from './MarketInfo'
 
+interface Info{
+    tokenId: number,
+    name: string,
+    description: string,
+    tokenURI: string,
+    price: bigint,
+    owner: string
+  }
+  
+
 export default function Market() {
     const {address} = useAccount()
     const [infos, setInfos] = useState<any[]>([])
@@ -16,7 +26,7 @@ export default function Market() {
     
     useEffect(()=>{
       if(data){
-        const cleanInfos = (data as any[]).map((info: any, i: number) => ({
+        const cleanInfos = (data as Info[]).map((info: Info, i: number) => ({
           tokenId: info.tokenId,
           name: info.name,
           description: info.description,

@@ -4,8 +4,17 @@ import { useWriteContract } from 'wagmi';
 import { config } from '../../config'
 import NFTabi from '../abis/NFTcontract.json'
 
+interface Info{
+  tokenId: number,
+  name: string,
+  description: string,
+  tokenURI: string,
+  price: bigint,
+  owner: string
+}
+
 type Props = {
-  nft: any;
+  nft: Info;
 };
 
 export default function CollectionsInfo({nft}: Props) {

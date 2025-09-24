@@ -4,9 +4,18 @@ import { config } from '../../config'
 import NFTabi from '../abis/NFTcontract.json'
 import CollectionsInfo from './CollectionsInfo'
 
+interface Info{
+    tokenId: number,
+    name: string,
+    description: string,
+    tokenURI: string,
+    price: bigint,
+    owner: string
+}
+
 export default function Collections() {
     const {address} = useAccount()
-    const [infos, setInfos] = useState<any[]>([])
+    const [infos, setInfos] = useState<Info[]>([])
     const { data } = useReadContract({
         abi: NFTabi,
         address: config.NFT_CONTRACT_ADDRESS,
@@ -16,7 +25,7 @@ export default function Collections() {
     
     useEffect(()=>{
         if(data){
-          const cleanInfos = (data as any[]).map((info: any, i: number) => ({
+          const cleanInfos = (data as Info[]).map((info: Info, i: number) => ({
           tokenId: info.tokenId,
           name: info.name,
           description: info.description,
