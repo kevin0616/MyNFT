@@ -2,9 +2,9 @@ import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import MintCard from "@/components/MintCard";
-import Form from '@/components/Form';
 import { useState } from "react";
 import Collections from "@/components/Collections";
+import Market from "@/components/Market";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export default function Home() {
-  const [tab, setTab] = useState<'Upload' | 'Collections'>('Upload')
+  const [tab, setTab] = useState<'Upload' | 'Collections' | 'Market'>('Upload')
 
   return (
     <div
@@ -27,6 +27,7 @@ export default function Home() {
         <Header onChange={setTab}/>
         {tab === 'Upload' && <MintCard/>}
         {tab === 'Collections' && <Collections/>}
+        {tab === 'Market' && <Market/>}
 
       </main>
       

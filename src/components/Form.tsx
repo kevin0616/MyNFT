@@ -7,7 +7,7 @@ import NFTabi from '../abis/NFTcontract.json'
 const JWT = process.env.NEXT_PUBLIC_JWT;
 
 const Form = () => {
-    const { writeContract, isSuccess } = useWriteContract()
+  const { writeContract, isSuccess } = useWriteContract()
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -27,15 +27,12 @@ const Form = () => {
     }
   };
 
-  const [NFTURL, setNFTURL] = useState<string>("");
+  const [NFTURI, setNFTURI] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 使用 FormData 送出
     const data = new FormData();
-    //data.append("name", formData.name);
-    //data.append("description", formData.description);
     if (file) {
       data.append("file", file);
     }
@@ -58,7 +55,7 @@ const Form = () => {
         const response = await request.json();
         console.log(response);
         console.log(process.env.NEXT_PUBLIC_PINATA_URL + response.IpfsHash?.toString())
-        setNFTURL(process.env.NEXT_PUBLIC_PINATA_URL + response.IpfsHash?.toString())
+        setNFTURI(process.env.NEXT_PUBLIC_PINATA_URL + response.IpfsHash?.toString())
         
     } catch (error) {
         console.log(error);
@@ -70,15 +67,15 @@ const Form = () => {
   };
 
   useEffect(() => {
-    if (NFTURL){
+    if (NFTURI){
         writeContract({ 
             abi: NFTabi,
             address: config.NFT_CONTRACT_ADDRESS,
             functionName: 'mintNFT',
-            args: [NFTURL],
+            args: [formData.name, formData.description, NFTURI],
         });
     }
-  }, [NFTURL]);
+  }, [NFTURI]);
 
   return (
     <div className="p-5 items-center w-full text-md flex flex-row justify-between">
@@ -93,7 +90,6 @@ const Form = () => {
                         {file ? (
                         <img
                             src={URL.createObjectURL(file)}
-                            //src={NFTURL}
                             alt="preview"
                             className="w-full h-full object-cover"
                         />
