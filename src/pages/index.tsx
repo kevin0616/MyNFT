@@ -6,6 +6,7 @@ import { useState } from "react";
 import Collections from "@/components/Collections";
 import Market from "@/components/Market";
 import Form from "@/components/Form";
+import Verify from "@/components/Verify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export default function Home() {
-  const [tab, setTab] = useState<'Homepage' | 'Upload' | 'Collections' | 'Market'>('Homepage')
+  const [tab, setTab] = useState<'Homepage' | 'Upload' | 'Collections' | 'Market' | 'Verify'>('Homepage')
 
   return (
     <div
@@ -30,6 +31,7 @@ export default function Home() {
         {tab === 'Upload' && <Form/>}
         {tab === 'Collections' && <Collections/>}
         {tab === 'Market' && <Market/>}
+        {tab === 'Verify' && <Verify/>}
 
       </main>
       

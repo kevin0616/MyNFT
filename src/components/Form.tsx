@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAccount, useReadContract, useWriteContract } from 'wagmi'
 import { config } from '../../config'
 import NFTabi from '../abis/NFTcontract.json'
+import { form } from "wagmi/chains";
 
 const JWT = process.env.NEXT_PUBLIC_JWT;
 
@@ -13,7 +14,7 @@ const Form = () => {
 
   useEffect(()=>{
     const checkCreator = async() => {
-      console.log(address)
+      //console.log(address)
       try {  
         const request = await fetch(
           process.env.NEXT_PUBLIC_BACKEND_URL + '/api/creator/check',
@@ -26,8 +27,11 @@ const Form = () => {
           }
         );
         const response = await request.json();
-        console.log(response);
+        //console.log(response);
         setExist(response.results)
+        if(response.results){
+          setUsername(response.creator.username)
+        }
       } catch (error) {
         console.log(error);
       }
@@ -84,10 +88,6 @@ const Form = () => {
     if (file) {
       data.append("file", file);
     }
-    data.forEach((value, key) => {
-        console.log(key, value);
-    });
-
     try {  
       const request = await fetch(
         "https://api.pinata.cloud/pinning/pinFileToIPFS",
@@ -100,9 +100,35 @@ const Form = () => {
         }
       );
       const response = await request.json();
-      console.log(response);
-      console.log(process.env.NEXT_PUBLIC_PINATA_URL + response.IpfsHash?.toString())
-      setNFTURI(process.env.NEXT_PUBLIC_PINATA_URL + response.IpfsHash?.toString())   
+      //console.log(response);
+      const URI = process.env.NEXT_PUBLIC_PINATA_URL + response.IpfsHash?.toString()
+      const metadata = {
+        name: formData.name,
+        description: formData.description,
+        image: URI,
+        creator: [
+          {
+            name: username,
+            address: address,
+          }
+        ]
+      }; 
+
+      const request2 = await fetch(
+        "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${JWT}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(metadata),
+        }
+      );
+
+      const response2 = await request2.json();
+      setNFTURI(process.env.NEXT_PUBLIC_PINATA_URL + response2.IpfsHash?.toString())
+
     } catch (error) {
         console.log(error);
     }
@@ -148,7 +174,7 @@ const Form = () => {
             </label>
             <label className="flex flex-col">
               Description:
-              <input className="outline rounded-sm" type="textarea" name="description" value={formData.description} onChange={handleChange} required />
+              <input className="outline rounded-sm" type="text" name="description" value={formData.description} onChange={handleChange} required />
             </label>
             </div>
         </div>

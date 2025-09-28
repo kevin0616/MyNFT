@@ -1,3 +1,3 @@
 export const config = {
-    NFT_CONTRACT_ADDRESS: '0xF805ECC01598C8A110c47cbEfE2a718f189550A3' as `0x${string}`,
+    NFT_CONTRACT_ADDRESS: '0x4a30A3526591b1D9f94B149D4526ecc59249252c' as `0x${string}`,
 }
