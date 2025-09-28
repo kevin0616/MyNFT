@@ -31,7 +31,6 @@ export default function CollectionsInfo({nft}: Props) {
       functionName: 'list',
       args: [nft.tokenId, price],
     });
-    
   }
 
   useEffect(()=>{

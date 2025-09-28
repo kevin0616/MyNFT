@@ -7,6 +7,54 @@ import NFTabi from '../abis/NFTcontract.json'
 const JWT = process.env.NEXT_PUBLIC_JWT;
 
 const Form = () => {
+  const {address} = useAccount()
+  const [exist, setExist] = useState(false)
+  const [username, setUsername] = useState('')
+
+  useEffect(()=>{
+    const checkCreator = async() => {
+      console.log(address)
+      try {  
+        const request = await fetch(
+          process.env.NEXT_PUBLIC_BACKEND_URL + '/api/creator/check',
+          {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },  
+            body: JSON.stringify({ wallet_address: address })
+          }
+        );
+        const response = await request.json();
+        console.log(response);
+        setExist(response.results)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    checkCreator()
+  }, [])
+
+  const register = async() => {
+    try {  
+      const request = await fetch(
+        process.env.NEXT_PUBLIC_BACKEND_URL + '/api/creator/register',
+        {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },  
+          body: JSON.stringify({ wallet_address: address, username: username })
+        }
+      );
+      const response = await request.json();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+   console.log(address, username)
+  }
+  
   const { writeContract, isSuccess } = useWriteContract()
   const [formData, setFormData] = useState({
     name: "",
@@ -40,81 +88,84 @@ const Form = () => {
         console.log(key, value);
     });
 
-    try {
-        
-        const request = await fetch(
-          "https://api.pinata.cloud/pinning/pinFileToIPFS",
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${JWT}`,
-            },
-            body: data,
-          }
-        );
-        const response = await request.json();
-        console.log(response);
-        console.log(process.env.NEXT_PUBLIC_PINATA_URL + response.IpfsHash?.toString())
-        setNFTURI(process.env.NEXT_PUBLIC_PINATA_URL + response.IpfsHash?.toString())
-        
+    try {  
+      const request = await fetch(
+        "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${JWT}`,
+          },
+          body: data,
+        }
+      );
+      const response = await request.json();
+      console.log(response);
+      console.log(process.env.NEXT_PUBLIC_PINATA_URL + response.IpfsHash?.toString())
+      setNFTURI(process.env.NEXT_PUBLIC_PINATA_URL + response.IpfsHash?.toString())   
     } catch (error) {
         console.log(error);
     }
-    //const tokenURI = process.env.NEXT_PUBLIC_PINATA_URL + ipfsHash?.toString()
-    //console.log(NFTURL)
-    
-
   };
 
   useEffect(() => {
     if (NFTURI){
-        writeContract({ 
-            abi: NFTabi,
-            address: config.NFT_CONTRACT_ADDRESS,
-            functionName: 'mintNFT',
-            args: [formData.name, formData.description, NFTURI],
-        });
+      writeContract({ 
+        abi: NFTabi,
+        address: config.NFT_CONTRACT_ADDRESS,
+        functionName: 'mintNFT',
+        args: [formData.name, formData.description, NFTURI],
+      });
     }
-  }, [NFTURI]);
+  }, [NFTURI])
 
   return (
     <div className="p-5 items-center w-full text-md flex flex-row justify-between">
-        <form className="w-full flex flex-col m-3 bg-slate-100 p-3 rounded-lg" onSubmit={handleSubmit}>
-            <div className="flex flex-row items-center justify-around">
-                <div className="items-center w-64">
-                    <label className="flex flex-col">
-                    Upload Your File Here:
-                    <input className="outline rounded-sm hidden" id="fileupload" type="file" onChange={handleFileChange} />
-                    
-                    <div className="w-64 h-64 border-2 border-dashed border-gray-400 flex items-center justify-center bg-gray-100">
-                        {file ? (
-                        <img
-                            src={URL.createObjectURL(file)}
-                            alt="preview"
-                            className="w-full h-full object-cover"
-                        />
-                        ) : (
-                        <span className="text-gray-400">Click to Upload</span>
-                        )}
-                    </div>
-                    </label>
-                </div>
-                <div className="flex flex-col items-center justify-center w-1/2">
-                    <label className="flex flex-col">
-                        Name:
-                        <input className="outline rounded-sm" type="text" name="name" value={formData.name} onChange={handleChange} required />
-                    </label>
-
-                    <label className="flex flex-col">
-                        Description:
-                        <input className="outline rounded-sm" type="textarea" name="description" value={formData.description} onChange={handleChange} required />
-                    </label>
-                </div>
+    {exist ? (
+      <form className="w-full flex flex-col m-3 bg-slate-100 p-3 rounded-lg" onSubmit={handleSubmit}>
+        <div className="flex flex-row items-center justify-around">
+          <div className="items-center w-64">
+            <label className="flex flex-col">
+              Upload Your File Here:
+              <input className="outline rounded-sm hidden" id="fileupload" type="file" onChange={handleFileChange} />
+              <div className="w-64 h-64 border-2 border-dashed border-gray-400 flex items-center justify-center bg-gray-100">
+                {file ? (
+                <img
+                    src={URL.createObjectURL(file)}
+                    alt="preview"
+                    className="w-full h-full object-cover"
+                />
+                ) : (
+                <span className="text-gray-400">Click to Upload</span>
+                )}
+              </div>
+            </label>
+          </div>
+          <div className="flex flex-col items-center justify-center w-1/2">
+            <label className="flex flex-col">
+              Name:
+              <input className="outline rounded-sm" type="text" name="name" value={formData.name} onChange={handleChange} required />
+            </label>
+            <label className="flex flex-col">
+              Description:
+              <input className="outline rounded-sm" type="textarea" name="description" value={formData.description} onChange={handleChange} required />
+            </label>
             </div>
-            <div className="flex flex-col m-2 p-2 items-center">
-                <button className="mx-2 p-2 bg-blue-300 rounded-lg hover:bg-blue-500 hover:text-white" type="submit">Mint</button>
-            </div>
-        </form>
+        </div>
+        <div className="flex flex-col m-2 p-2 items-center">
+          <button className="mx-2 p-2 bg-blue-300 rounded-lg hover:bg-blue-500 hover:text-white" type="submit">Mint</button>
+        </div>
+      </form>
+    ) : (
+      <div className="w-full flex flex-col items-center">
+        Not a creator yet...? Pick a username and become one right now!
+        <div>
+          <input className="outline rounded-sm" type="text" name="username" value={username} onChange={(e) => {setUsername(e.target.value)}} required />
+          <button onClick={register} className="mx-2 mt-4 p-2 bg-blue-300 rounded-lg hover:bg-blue-500 hover:text-white">Register</button>
+        </div>
+      </div>
+    ) 
+    }
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
-import MintCard from "@/components/MintCard";
+import Homepage from "@/components/Homepage";
 import { useState } from "react";
 import Collections from "@/components/Collections";
 import Market from "@/components/Market";
+import Form from "@/components/Form";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export default function Home() {
-  const [tab, setTab] = useState<'Upload' | 'Collections' | 'Market'>('Upload')
+  const [tab, setTab] = useState<'Homepage' | 'Upload' | 'Collections' | 'Market'>('Homepage')
 
   return (
     <div
@@ -25,7 +26,8 @@ export default function Home() {
     >
       <main className="flex flex-col">
         <Header onChange={setTab}/>
-        {tab === 'Upload' && <MintCard/>}
+        {tab === 'Homepage' && <Homepage/>}
+        {tab === 'Upload' && <Form/>}
         {tab === 'Collections' && <Collections/>}
         {tab === 'Market' && <Market/>}
 

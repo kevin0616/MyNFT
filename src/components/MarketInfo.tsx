@@ -5,32 +5,30 @@ import { config } from '../../config'
 import NFTabi from '../abis/NFTcontract.json'
 
 interface Info{
-    tokenId: number,
-    name: string,
-    description: string,
-    tokenURI: string,
-    price: bigint,
-    owner: string
-  }
+  tokenId: number,
+  name: string,
+  description: string,
+  tokenURI: string,
+  price: bigint,
+  owner: string
+}
   
-  type Props = {
-    nft: Info;
-  };
+type Props = {
+  nft: Info;
+};
 
 export default function MarketInfo({nft}: Props) {
-
-    const { writeContract, isSuccess } = useWriteContract()
+  const { writeContract, isSuccess } = useWriteContract()
   
-    const buyNFT = () => {
-      writeContract({ 
-        abi: NFTabi,
-        address: config.NFT_CONTRACT_ADDRESS,
-        functionName: 'buy',
-        args: [nft.tokenId],
-        value: nft.price,
-      });
-      
-    }
+  const buyNFT = () => {
+    writeContract({ 
+      abi: NFTabi,
+      address: config.NFT_CONTRACT_ADDRESS,
+      functionName: 'buy',
+      args: [nft.tokenId],
+      value: nft.price,
+    });    
+  }
 
   return (
     <div className='w-full h-full rounded-lg m-3 bg-slate-200 p-5 w-full flex flex-col justify-center items-center'> 
@@ -48,6 +46,6 @@ export default function MarketInfo({nft}: Props) {
         <label>Price: {nft.price}</label>
         <button onClick={buyNFT} className=" px-4 p-2 bg-blue-300 rounded-lg hover:bg-blue-500 hover:text-white" type="submit">Buy</button>            
       </div>
-      </div>
+    </div>
   )
 }
