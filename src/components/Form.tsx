@@ -12,7 +12,7 @@ const Form = () => {
   const [exist, setExist] = useState(false)
   const [username, setUsername] = useState('')
 
-  useEffect(()=>{
+  /*useEffect(()=>{
     const checkCreator = async() => {
       //console.log(address)
       try {  
@@ -37,7 +37,7 @@ const Form = () => {
       }
     }
     checkCreator()
-  }, [])
+  }, [])*/
 
   const register = async() => {
     try {  
@@ -147,7 +147,6 @@ const Form = () => {
 
   return (
     <div className="p-5 items-center w-full text-md flex flex-row justify-between">
-    {exist ? (
       <form className="w-full flex flex-col m-3 bg-slate-100 p-3 rounded-lg" onSubmit={handleSubmit}>
         <div className="flex flex-row items-center justify-around">
           <div className="items-center w-64">
@@ -182,16 +181,6 @@ const Form = () => {
           <button className="mx-2 p-2 bg-blue-300 rounded-lg hover:bg-blue-500 hover:text-white" type="submit">Mint</button>
         </div>
       </form>
-    ) : (
-      <div className="w-full flex flex-col items-center">
-        Not a creator yet...? Pick a username and become one right now!
-        <div>
-          <input className="outline rounded-sm" type="text" name="username" value={username} onChange={(e) => {setUsername(e.target.value)}} required />
-          <button onClick={register} className="mx-2 mt-4 p-2 bg-blue-300 rounded-lg hover:bg-blue-500 hover:text-white">Register</button>
-        </div>
-      </div>
-    ) 
-    }
     </div>
   );
 };

@@ -14,7 +14,6 @@ export default function Header({onChange} : Props) {
         <button className='h-full hover:cursor-pointer hover:text-white' onClick={() => onChange("Upload")}>Upload</button>
         <button className='h-full hover:cursor-pointer hover:text-white' onClick={() => onChange("Collections")}>Collections</button>
         <button className='h-full hover:cursor-pointer hover:text-white' onClick={() => onChange("Market")}>Market</button>
-        <button className='h-full hover:cursor-pointer hover:text-white' onClick={() => onChange("Verify")}>Verify</button>
       </div>
       <ConnectButton />
     </div>

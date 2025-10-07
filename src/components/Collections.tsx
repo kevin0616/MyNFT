@@ -40,7 +40,7 @@ export default function Collections() {
 
   return (
     <div>
-      <div className='w-full grid grid-cols-4 gap-5 flex justify-between '>
+      <div className='w-full grid grid-cols-3 gap-5 flex justify-between '>
         {infos != null &&
         (infos).map((nft, idx) => (
           <CollectionsInfo key={idx} nft={nft}></CollectionsInfo>

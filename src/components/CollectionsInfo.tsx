@@ -35,9 +35,7 @@ export default function CollectionsInfo({nft}: Props) {
   const {address: wallet_address} = useAccount()
 
   const [craftData, setCraftData] = useState({
-    comment: "",
-    password: ""
-  })
+    tag: ""  })
   const [metadata, setMetadata] = useState<Metadata>()
   const [popup, setPopup] = useState(false)
 
@@ -52,6 +50,32 @@ export default function CollectionsInfo({nft}: Props) {
     });
   };
 
+  useEffect(()=>{
+    const fetchTags = async() => {
+      try {  
+        const request = await fetch(
+          process.env.NEXT_PUBLIC_BACKEND_URL + '/api/proof/list',
+          {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },  
+            body: JSON.stringify({
+              token_id: nft.tokenId.toString(),
+            })
+          }
+        );
+        const response = await request.json();
+        console.log(response);
+        setTags(response.map((item: { tag: any; }) => item.tag));
+        //setExist(response.results)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchTags()
+  }, [])
+
   const craftProof = async() => {
     try {  
       const request = await fetch(
@@ -64,10 +88,10 @@ export default function CollectionsInfo({nft}: Props) {
           body: JSON.stringify({ 
             address: wallet_address,
             creator_address: metadata?.creator ? metadata.creator[0].address : "",
-            event_info: JSON.stringify({"comment": craftData.comment, "password": craftData.password}), 
+            event_info: JSON.stringify({"tag": craftData.tag}), 
             token_uri: nft.tokenURI,
-            password: craftData.password,
             token_id: nft.tokenId.toString(),
+            tag: craftData.tag,
           })
         }
       );
@@ -78,7 +102,7 @@ export default function CollectionsInfo({nft}: Props) {
     } catch (error) {
       console.log(error);
     }
-    setCraftData({comment: "", password: ""})
+    setCraftData({tag: ""})
     setPopup(false)
   }
 
@@ -113,6 +137,7 @@ export default function CollectionsInfo({nft}: Props) {
     }
   }, [isSuccess])
 
+  const [tags, setTags] = useState<String[]>(['123', '456', 'abc', 'df', 'ghi'])
   const [price, setPrice] = useState('0');
   const [list, setList] = useState(false);
   return (
@@ -128,10 +153,15 @@ export default function CollectionsInfo({nft}: Props) {
       }
       <div className='w-full text-left text-xl font-semibold'>{nft.name}</div>
       <div className='w-full text-left'>{nft.description}</div>
+      <div className='w-full flex flex-wrap gap-1'>
+        {tags.map((key, index) => (
+          <div className='bg-blue-400 px-2 rounded-2xl'>{key}</div>
+        ))}
+          <div onClick={() => {setPopup(true)}} className='bg-blue-400 px-2 rounded-2xl'>+</div>
+      </div>
         <div className='flex flex-row'>
           {list === false ? (
             <div>
-              <button onClick={() => {setPopup(true)}} className="mt-2 mx-2 p-2 bg-green-300 rounded-lg hover:bg-green-500 hover:text-white" type="submit">Craft</button>
               <button onClick={() => {setList(true)}} className="mt-2 mx-2 p-2 bg-blue-300 rounded-lg hover:bg-blue-500 hover:text-white" type="submit">List</button>
             </div>
           ) : (
@@ -167,9 +197,8 @@ export default function CollectionsInfo({nft}: Props) {
             }
             </div>
             <div className="flex flex-col m-2 p-2 gap-2">
-              Comment:<input className="outline rounded-sm" type="text" name="comment" value={craftData.comment} onChange={handleCraftChange}/>
-              Password:<input className="outline rounded-sm" type="text" name="password" value={craftData.password} onChange={handleCraftChange} required />
-              <button onClick={craftProof} className="mt-2 mx-2 p-2 bg-green-300 rounded-lg hover:bg-green-500 hover:text-white" type="submit">Craft</button>
+              New Tag:<input className="outline rounded-sm" type="text" name="tag" value={craftData.tag} onChange={handleCraftChange}/>
+              <button onClick={craftProof} className="mt-2 mx-2 p-2 bg-green-300 rounded-lg hover:bg-green-500 hover:text-white" type="submit">Add</button>
             </div>
           </div>
         </div> 
