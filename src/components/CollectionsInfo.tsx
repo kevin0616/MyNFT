@@ -65,9 +65,9 @@ export default function CollectionsInfo({nft}: Props) {
             })
           }
         );
-        const response = await request.json();
+        const response = await request.json() as { tag: string }[];
         console.log(response);
-        setTags(response.map((item: { tag: any; }) => item.tag));
+        setTags(response.map((item) => item.tag));
         //setExist(response.results)
       } catch (error) {
         console.log(error);
