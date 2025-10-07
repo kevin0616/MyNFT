@@ -23,7 +23,7 @@ export default function Home() {
 
   return (
     <div
-      className={`${geistSans.className} ${geistMono.className} font-sans min-h-screen min-w-screen flex`} 
+      className={`${geistSans.className} ${geistMono.className} font-sans min-h-screen`} 
     >
       <main className="flex flex-col">
         <Header onChange={setTab}/>
