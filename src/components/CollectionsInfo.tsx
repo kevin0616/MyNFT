@@ -137,7 +137,7 @@ export default function CollectionsInfo({nft}: Props) {
     }
   }, [isSuccess])
 
-  const [tags, setTags] = useState<String[]>(['123', '456', 'abc', 'df', 'ghi'])
+  const [tags, setTags] = useState<string[]>([])
   const [price, setPrice] = useState('0');
   const [list, setList] = useState(false);
   return (
@@ -155,7 +155,7 @@ export default function CollectionsInfo({nft}: Props) {
       <div className='w-full text-left'>{nft.description}</div>
       <div className='w-full flex flex-wrap gap-1'>
         {tags.map((key, index) => (
-          <div className='bg-blue-400 px-2 rounded-2xl'>{key}</div>
+          <div key={index} className='bg-blue-400 px-2 rounded-2xl'>{key}</div>
         ))}
           <div onClick={() => {setPopup(true)}} className='bg-blue-400 px-2 rounded-2xl'>+</div>
       </div>
